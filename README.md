@@ -4,14 +4,14 @@ RAGCite AI is a professional, high-performance Retrieval-Augmented Generation (R
 
 ---
 
-## 📸 Demo Preview
+##  Demo Preview
 
 ![RAGCite AI Dashboard (Light/Dark Mode)](./assets/screenshot.png)
 *Figure 1: RAGCite AI interactive query interface with exact document citations.*
 
 ---
 
-## ✨ Features
+##  Features
 
 - **Context-Aware Synthesis**: Utilizes Groq-powered LLMs (`llama-3.1-8b-instant`) to synthesize clear, accurate answers directly derived from document contents.
 - **Strict Verification & Citations**: Every generated answer is backed by exact source file tags and page number markers extracted during indexing.
@@ -21,7 +21,7 @@ RAGCite AI is a professional, high-performance Retrieval-Augmented Generation (R
 
 ---
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 ### Backend
 - **FastAPI**: Fast, asynchronous Web API framework.
@@ -37,7 +37,7 @@ RAGCite AI is a professional, high-performance Retrieval-Augmented Generation (R
 
 ---
 
-## 📂 Project Structure
+##  Project Structure
 
 ```text
 rag_tool_assistant/
@@ -62,7 +62,7 @@ rag_tool_assistant/
 
 ---
 
-## 🚀 Getting Started
+##  Getting Started
 
 ### Prerequisites
 - Python 3.10+
@@ -99,6 +99,6 @@ Open `http://localhost:4200` in your browser to access the RAGCite AI dashboard.
 
 ---
 
-## 📋 License
+##  License
 
 This project is licensed under the MIT License.
