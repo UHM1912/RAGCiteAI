@@ -15,9 +15,13 @@ chroma.sqlite3
 # PDF & Dataset files
 data/pdf/
 data/text_files/
+backend/data/
 
 # Jupyter
 .ipynb_checkpoints/
+
+# Environment configurations
+.env
 
 # OS junk
 .DS_Store
@@ -25,3 +29,4 @@ Thumbs.db
 
 # Large model files
 models/
+

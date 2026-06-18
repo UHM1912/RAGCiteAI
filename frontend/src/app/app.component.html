@@ -1,0 +1,185 @@
+<div class="container">
+  <!-- Header -->
+  <header class="app-header">
+    <div class="logo-area">
+      <div class="logo-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="url(#logoGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M2 17L12 22L22 17" stroke="url(#logoGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M2 12L12 17L22 12" stroke="url(#logoGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <defs>
+            <linearGradient id="logoGrad" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#6366f1"/>
+              <stop offset="1" stop-color="#8b5cf6"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <span class="logo-text">RAGCite <span class="accent-text">AI</span></span>
+    </div>
+    <div class="header-actions">
+      <button class="theme-toggle-btn" (click)="toggleTheme()" [title]="isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'">
+        <!-- Sun icon (shown in dark mode to switch to light) -->
+        <svg *ngIf="isDarkMode" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <!-- Moon icon (shown in light mode to switch to dark) -->
+        <svg *ngIf="!isDarkMode" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
+      <div class="status-indicator">
+        <span class="status-dot"></span>
+        <span class="status-text">Index Ready</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <h1>Document Intelligence Engine</h1>
+    <p class="hero-subtitle">Instantly query your knowledge base. Synthesized responses are backed by exact document citations.</p>
+  </section>
+
+  <!-- Search Area -->
+  <div class="search-container">
+    <form (ngSubmit)="onSearch()" class="search-form">
+      <div class="search-input-wrapper">
+        <span class="search-icon-inside">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </span>
+        <input 
+          type="text" 
+          name="query" 
+          [(ngModel)]="query" 
+          placeholder="Ask a question about the uploaded documents..." 
+          class="search-input" 
+          [disabled]="loading"
+          autocomplete="off"
+        />
+        <button 
+          *ngIf="query" 
+          type="button" 
+          class="clear-button" 
+          (click)="clearSearch()" 
+          [disabled]="loading"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <button type="submit" class="search-button" [disabled]="loading || !query.trim()">
+        <span *ngIf="!loading">Generate Answer</span>
+        <span *ngIf="loading" class="spinner"></span>
+      </button>
+    </form>
+
+    <!-- Quick Prompts -->
+    <div class="quick-prompts" *ngIf="!loading && !response">
+      <span class="prompt-label">Quick Queries:</span>
+      <button type="button" class="prompt-chip" (click)="query = 'Who is Utkarsh Misra?'; onSearch()">
+        <span>Who is Utkarsh Misra?</span>
+      </button>
+      <button type="button" class="prompt-chip" (click)="query = 'What is Green AI Comparometer?'; onSearch()">
+        <span>Green AI Comparometer</span>
+      </button>
+      <button type="button" class="prompt-chip" (click)="query = 'What are the lyrics of Shri Krishna Govind?'; onSearch()">
+        <span>Krishna Govind Lyrics</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-state fade-in">
+    <div class="loading-pulse-wrapper">
+      <div class="loading-pulse"></div>
+      <div class="loading-pulse-outer"></div>
+    </div>
+    <p class="loading-title">Synthesizing Answer</p>
+    <p class="loading-subtitle">Retrieving relevant passages and generating response via Llama 3...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error" class="error-card fade-in">
+    <div class="error-icon-wrapper">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="8" x2="12" y2="12"></line>
+        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+      </svg>
+    </div>
+    <div class="error-content">
+      <h4>Query Failed</h4>
+      <p class="error-text">{{ error }}</p>
+    </div>
+  </div>
+
+  <!-- Response Section -->
+  <div *ngIf="response" class="response-section fade-in">
+    <!-- Answer Panel -->
+    <div class="answer-card">
+      <div class="card-header">
+        <div class="header-title-area">
+          <span class="answer-badge">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+              <polyline points="2 17 12 22 22 17"></polyline>
+              <polyline points="2 12 12 17 22 12"></polyline>
+            </svg>
+            AI Answer
+          </span>
+        </div>
+        <div class="confidence-container">
+          <span class="confidence-label">Confidence Score</span>
+          <span class="confidence-value" [ngClass]="response.confidence > 0.7 ? 'high-confidence' : 'low-confidence'">
+            {{ response.confidence * 100 | number:'1.0-0' }}%
+          </span>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="answer-text">{{ response.answer }}</p>
+      </div>
+    </div>
+
+    <!-- Sources Panel -->
+    <div class="sources-card" *ngIf="response.sources && response.sources.length > 0">
+      <div class="sources-header">
+        <h3>Cited Sources</h3>
+        <span class="sources-count">{{ response.sources.length }} document reference(s)</span>
+      </div>
+      <div class="sources-list">
+        <div class="source-item" *ngFor="let source of response.sources">
+          <div class="source-meta">
+            <span class="source-file">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2 v16a2 2 0 0 0 2 2 h12a2 2 0 0 0 2-2 V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <polyline points="10 9 9 9 8 9"></polyline>
+              </svg>
+              {{ source.source }}
+            </span>
+            <span class="source-page" *ngIf="source.page && source.page !== '-'">Page {{ source.page }}</span>
+          </div>
+          <div class="source-preview">
+            <p>"{{ source.preview }}"</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
